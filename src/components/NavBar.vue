@@ -36,7 +36,7 @@
 <style scoped>
 .navbar {
   padding: 10px 0;
-  margin-bottom: 20px;
+  margin-bottom: 4rem;
 }
 
 .navbar .nav-item {

@@ -12,7 +12,7 @@ export const products = [
     imageUrl: mathImg,
   },
   {
-    id: '123',
+    id: '124',
     subject: 'math',
     location: 'york',
     price: '100.00',
@@ -20,7 +20,7 @@ export const products = [
     imageUrl: mathImg,
   },
   {
-    id: '123',
+    id: '125',
     subject: 'math',
     location: 'dubai',
     price: '100.00',
@@ -28,7 +28,7 @@ export const products = [
     imageUrl: mathImg,
   },
   {
-    id: '123',
+    id: '126',
     subject: 'english',
     location: 'london',
     price: '90.00',
@@ -36,7 +36,7 @@ export const products = [
     imageUrl: englishImg,
   },
   {
-    id: '123',
+    id: '127',
     subject: 'english',
     location: 'york',
     price: '90.00',
@@ -44,7 +44,7 @@ export const products = [
     imageUrl: englishImg,
   },
   {
-    id: '123',
+    id: '128',
     subject: 'english',
     location: 'dubai',
     price: '100.00',
@@ -52,7 +52,7 @@ export const products = [
     imageUrl: englishImg,
   },
   {
-    id: '123',
+    id: '129',
     subject: 'music',
     location: 'london',
     price: '80.00',
@@ -60,7 +60,7 @@ export const products = [
     imageUrl: musicImg,
   },
   {
-    id: '123',
+    id: '130',
     subject: 'music',
     location: 'york',
     price: '90.00',
@@ -68,7 +68,7 @@ export const products = [
     imageUrl: musicImg,
   },
   {
-    id: '123',
+    id: '131',
     subject: 'music',
     location: 'dubai',
     price: '80.00',
