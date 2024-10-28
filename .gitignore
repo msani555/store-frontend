@@ -1,3 +1,6 @@
+# Block vscode
+.vscode
+
 # Logs
 logs
 *.log
