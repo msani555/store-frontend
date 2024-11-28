@@ -87,29 +87,29 @@
       <article class="col-12 col-md-10">
         <section class="row g-4">
           <article
-            v-for="product in products"
-            v-bind:key="product.id"
+            v-for="lesson in lessons"
+            v-bind:key="lesson.id"
             class="col-6 col-md-4"
           >
             <div class="border p-4 h-100 bg-light">
               <div class="d-flex justify-content-between">
-                <router-link v-bind:to="'/courses/' + product.id">
+                <router-link v-bind:to="'/courses/' + lesson.id">
                   <p>
-                    Name: <b>{{ product.subject }}</b>
+                    Name: <b>{{ lesson.subject }}</b>
                   </p>
                   <p>
-                    Location: <b>{{ product.location }}</b>
+                    Location: <b>{{ lesson.location }}</b>
                   </p>
                   <p>
-                    Price: <b>${{ product.price }}</b>
+                    Price: <b>${{ lesson.price }}</b>
                   </p>
                   <p>
-                    Spaces: <b>{{ product.spaces }}</b>
+                    Spaces: <b>{{ lesson.spaces }}</b>
                   </p>
                 </router-link>
                 <img
-                  v-bind:src="product.imageUrl"
-                  alt="product.imageUrl"
+                  :src="lesson.imageUrl"
+                  alt="lesson.imageUrl"
                   class="img-fluid"
                   style="width: 90px; height: 100%"
                 />
@@ -129,14 +129,30 @@
 </template>
 
 <script>
-import { products } from '../dummy_data'
 export default {
-  name: 'ProductsPage',
+  name: 'lessonsPage',
   data() {
     return {
-      products,
-      title: 'Hello products',
+      lessons: [],
+      title: 'lessons',
     }
+  },
+  methods: {
+    async fetchLessons() {
+      try {
+        const response = await fetch('http://localhost:5050/api/lessons')
+        const data = await response.json()
+        console.log('data:', data.results)
+        this.lessons = data.results
+        console.log('app: ', this.lessons)
+      } catch (error) {
+        console.error('Error fetching lessons:', error)
+      }
+    },
+  },
+  created() {
+    this.fetchLessons()
+    // this.fetchCart() // Fetch the user's cart on page load
   },
 }
 </script>
