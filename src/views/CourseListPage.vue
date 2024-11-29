@@ -2,126 +2,63 @@
   <div class="container">
     <section class="row">
       <article class="col-12 col-md-2">
-        <form action="">
-          <h5 class="fw-bolder">Sort By:</h5>
-          <div class="form-check">
+        <!-- <SortControls
+          :sortOptions="['subject', 'location', 'price', 'spaces']"
+          @onSort="sortLessons"
+        /> -->
+        <div>
+          hey
+          <label
+            v-for="option in sortOptions"
+            :key="option"
+            class="btn btn-outline-primary my-2 d-block"
+            :class="{ active: sortAttribute === option }"
+          >
             <input
-              class="form-check-input"
               type="radio"
-              name="sortBy"
-              id="subject"
-              value="subject"
+              name="attribute"
+              :value="option"
+              v-model="sortAttribute"
+              @change="sortLessons"
             />
-            <label class="form-check-label" for="flexRadioDefault1">
-              Subject
-            </label>
-          </div>
-          <div class="form-check">
+            {{ option.charAt(0).toUpperCase() + option.slice(1) }}
+          </label>
+        </div>
+        <h5 class="mt-3">Order:</h5>
+        <div>
+          <label class="btn btn-outline-secondary my-2 d-block">
             <input
-              class="form-check-input"
               type="radio"
-              name="sortBy"
-              id="location"
+              name="order"
+              value="asc"
+              v-model="sortOrder"
+              @change="sortLessons"
             />
-            <label class="form-check-label" for="flexRadioDefault2">
-              Location
-            </label>
-          </div>
-
-          <div class="form-check">
+            Ascending
+          </label>
+          <label class="btn btn-outline-secondary d-block">
             <input
-              class="form-check-input"
               type="radio"
-              name="sortBy"
-              id="price"
-              value="price"
+              name="order"
+              value="desc"
+              v-model="sortOrder"
+              @change="sortLessons"
             />
-            <label class="form-check-label" for="flexRadioDefault2">
-              Price
-            </label>
-          </div>
-
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="sortBy"
-              id="availability"
-              value="availability"
-            />
-            <label class="form-check-label" for="flexRadioDefault2">
-              Availability
-            </label>
-          </div>
-        </form>
-
-        <form action="" class="pt-4">
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="orderBy"
-              id="subject"
-              value="subject"
-            />
-            <label class="form-check-label" for="flexRadioDefault1">
-              Ascending
-            </label>
-          </div>
-
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="orderBy"
-              id="subject"
-              value="subject"
-            />
-            <label class="form-check-label" for="flexRadioDefault1">
-              Descending
-            </label>
-          </div>
-        </form>
+            Descending
+          </label>
+        </div>
+        <!-- <button @click="sortLessons">Sort</button> -->
       </article>
 
       <article class="col-12 col-md-10">
         <section class="row g-4">
-          <article
-            v-for="lesson in lessons"
-            v-bind:key="lesson.id"
+          <LessonCard
             class="col-6 col-md-4"
-          >
-            <div class="border p-4 h-100 bg-light">
-              <div class="d-flex justify-content-between">
-                <router-link v-bind:to="'/courses/' + lesson.id">
-                  <p>
-                    Name: <b>{{ lesson.subject }}</b>
-                  </p>
-                  <p>
-                    Location: <b>{{ lesson.location }}</b>
-                  </p>
-                  <p>
-                    Price: <b>${{ lesson.price }}</b>
-                  </p>
-                  <p>
-                    Spaces: <b>{{ lesson.spaces }}</b>
-                  </p>
-                </router-link>
-                <img
-                  :src="lesson.imageUrl"
-                  alt="lesson.imageUrl"
-                  class="img-fluid"
-                  style="width: 90px; height: 100%"
-                />
-              </div>
-
-              <div class="text-center pt-4">
-                <button class="btn btn-lg btn-primary col-12">
-                  Buy Course
-                </button>
-              </div>
-            </div>
-          </article>
+            v-for="lesson in lessons"
+            :key="lesson.id"
+            :lesson="lesson"
+            @add-to-cart="addToCart"
+          />
         </section>
       </article>
     </section>
@@ -129,12 +66,19 @@
 </template>
 
 <script>
+import LessonCard from '../components/LessonCard.vue'
+
 export default {
-  name: 'lessonsPage',
+  components: { LessonCard },
   data() {
     return {
       lessons: [],
-      title: 'lessons',
+      sortAttribute: 'subject',
+      sortOrder: 'asc',
+      selectedLesson: null,
+      sortOptions: ['subject', 'location', 'price', 'spaces'],
+
+      cart: [],
     }
   },
   methods: {
@@ -144,12 +88,97 @@ export default {
         const data = await response.json()
         console.log('data:', data.results)
         this.lessons = data.results
-        console.log('app: ', this.lessons)
+      } catch (error) {
+        console.error('Error fetching lessons:', error)
+      }
+    },
+    addToCart(lesson) {
+      // Reduce space and add lesson to cart
+      // if (lesson.spaces > 0) {
+      //   lesson.spaces -= 1
+      //   this.cart.push({ ...lesson })
+      // }
+      this.cart.push({ ...lesson })
+      console.log(`cart: `, this.cart)
+    },
+
+    sortLessons() {
+      const sorted = [...this.lessons].sort((a, b) => {
+        const attribute = this.sortAttribute
+        const order = this.sortOrder === 'asc' ? 1 : -1
+
+        if (typeof a[attribute] === 'string') {
+          return a[attribute].localeCompare(b[attribute]) * order
+        }
+        return (a[attribute] - b[attribute]) * order
+      })
+
+      this.lessons = sorted
+      console.log('sorted lessons: ', this.lessons)
+    },
+  },
+  mounted() {
+    this.fetchLessons()
+  },
+}
+</script>
+
+<!-- <script>
+import LessonCard from '../components/LessonCard.vue'
+import SortControls from '@/components/SortControls.vue'
+
+export default {
+  // props: ['lessons', 'cart'],
+  emits: ['update-cart'],
+  components: { LessonCard, SortControls },
+  name: 'lessonsPage',
+  data() {
+    return {
+      title: 'lessons',
+      lessons: [],
+      sortCriteria: { attribute: null, order: null },
+    }
+  },
+  computed: {
+    sortedLessons() {
+      // Return sorted lessons based on the current sort criteria
+      if (!this.sortCriteria.attribute) return this.lessons
+
+      return [...this.lessons].sort((a, b) => {
+        let valueA = a[this.sortCriteria.attribute]
+        let valueB = b[this.sortCriteria.attribute]
+
+        // Handle strings (case-insensitive)
+        if (typeof valueA === 'string' && typeof valueB === 'string') {
+          valueA = valueA.toLowerCase()
+          valueB = valueB.toLowerCase()
+        }
+
+        // Handle sorting order
+        if (this.sortCriteria.order === 'asc') {
+          return valueA > valueB ? 1 : valueA < valueB ? -1 : 0
+        } else {
+          return valueA < valueB ? 1 : valueA > valueB ? -1 : 0
+        }
+      })
+    },
+  },
+  methods: {
+    async fetchLessons() {
+      try {
+        const response = await fetch('http://localhost:5050/api/lessons')
+        const data = await response.json()
+        console.log('data:', data.results)
+        this.lessons = data.results
       } catch (error) {
         console.error('Error fetching lessons:', error)
       }
     },
   },
+  sortLessons({ attribute, order }) {
+    this.sortCriteria = { attribute, order } // Update sort criteria
+  },
+
   created() {
     this.fetchLessons()
     // this.fetchCart() // Fetch the user's cart on page load
@@ -161,4 +190,4 @@ export default {
 h1 {
   color: green;
 }
-</style>
+</style> -->

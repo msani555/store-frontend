@@ -33,13 +33,12 @@
 </template>
 
 <script>
-import { products } from '@/dummy_data'
-
 export default {
   name: 'ProductDetailPage',
   data() {
     return {
-      course: products.find(p => p.id === this.$route.params.id),
+      course: '',
+      // course: products.find(p => p.id === this.$route.params.id),
     }
   },
 }
