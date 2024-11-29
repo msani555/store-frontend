@@ -40,13 +40,13 @@
 </template>
 
 <script>
-import { cartItems } from '@/dummy_data'
+// import { cartItems } from '@/dummy_data'
 
 export default {
   name: 'ProductsPage',
   data() {
     return {
-      cartItems,
+      cartItems: [],
     }
   },
   computed: {
