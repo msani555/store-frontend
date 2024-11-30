@@ -2,30 +2,36 @@
   <section class="container">
     <div class="row g-4">
       <article
-        v-for="product in cartItems"
-        :key="product.id"
+        v-for="cartItem in cart.slice().reverse()"
+        :key="cartItem.id"
         class="col-12 col-md-10 col-lg-8 mx-auto"
       >
         <div class="d-flex justify-content-between border p-4 rounded-3">
           <img
-            v-bind:src="product.imageUrl"
+            v-bind:src="cartItem.imageUrl"
             alt="item.imageUrl"
             class="img-fluid"
             style="width: 90px; height: 100%"
           />
           <div>
             <p>
-              Name: <b>{{ product.subject }}</b>
+              Name: <b>{{ cartItem.subject }}</b>
             </p>
             <p>
-              Location: <b>${{ product.location }}</b>
+              Location: <b>${{ cartItem.location }}</b>
             </p>
             <p>
-              Price: <b>${{ product.price }}</b>
+              Price: <b>${{ cartItem.price }}</b>
+              <b>${{ cartItem._id }}</b>
             </p>
           </div>
           <div class="align-self-center">
-            <button class="btn btn-lg btn-dark">Remove Course</button>
+            <button
+              @click="removeFromCart(cartItem._id)"
+              class="btn btn-lg btn-dark"
+            >
+              Remove Course
+            </button>
           </div>
         </div>
       </article>
@@ -47,9 +53,13 @@ export default {
       required: true,
     },
   },
-  computed: {
-    totalItems() {
-      return this.cart.reduce((total, item) => total + item.quantity, 0)
+  totalPrice: {
+    type: Number,
+    required: true,
+  },
+  methods: {
+    removeFromCart(lessonId) {
+      this.$emit('remove-from-cart', lessonId)
     },
   },
 }
