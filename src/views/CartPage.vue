@@ -19,6 +19,9 @@
                 Name: <b>{{ cartItem.subject }}</b>
               </p>
               <p>
+                Qty: <b class="text-primary">{{ cartItem.quantity }}</b>
+              </p>
+              <p>
                 Location: <b>{{ cartItem.location }}</b>
               </p>
               <p>

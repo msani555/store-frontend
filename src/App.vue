@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NavBar :cartCount="cart.length" @toggle-cart="toggleView" />
+    <NavBar :cartCount="cartCount" @toggle-cart="toggleView" />
     <div v-if="showCart">
       <Cart
         :cart="cart"
@@ -27,13 +27,15 @@ export default {
       lessons: [],
       cart: [],
       showCart: false,
+      cartCount: 0,
+      totalPrice: 0,
     }
   },
-  computed: {
-    totalPrice() {
-      return this.cart.reduce((sum, item) => sum + item.price, 0)
-    },
-  },
+  // computed: {
+  //   totalPrice() {
+  //     return this.cart.reduce((sum, item) => sum + item.price, 0)
+  //   },
+  // },
   methods: {
     async fetchLessons() {
       try {
@@ -45,12 +47,27 @@ export default {
         console.error('Error fetching lessons:', error)
       }
     },
+    // addToCart(lesson) {
+    //   // Reduce space and add lesson to cart
+    //   if (lesson.spaces > 0) {
+    //     lesson.spaces -= 1
+    //     this.cart.push({ ...lesson })
+    //   }
+    // },
+
     addToCart(lesson) {
-      // Reduce space and add lesson to cart
       if (lesson.spaces > 0) {
-        lesson.spaces -= 1
-        this.cart.push({ ...lesson })
+        const existingLesson = this.cart.find(item => item._id === lesson._id)
+        if (existingLesson) {
+          existingLesson.quantity += 1 // Increment the quantity
+          lesson.spaces -= 1
+        } else {
+          this.cart.push({ ...lesson, quantity: 1 }) // Add with initial quantity of 1
+          lesson.spaces -= 1
+        }
       }
+      this.updateCartCount()
+      this.updateTotalPrice()
     },
 
     toggleView() {
@@ -58,24 +75,65 @@ export default {
     },
 
     removeFromCart(lessonId) {
-      const index = this.cart.findIndex(cartItem => cartItem._id === lessonId)
-      if (index > -1) {
-        const removedLesson = this.cart.splice(index, 1)[0] // Remove from cart and get the lesson
+      const existingLessonIndex = this.cart.findIndex(
+        item => item._id === lessonId,
+      )
+      console.log('Clicked the removeFromCart: ', existingLessonIndex)
 
-        // Restore spaces to the correct lesson in the lessons array
-        const originalLesson = this.lessons.find(
-          l => l._id === removedLesson._id,
-        )
+      if (existingLessonIndex > -1) {
+        const existingLesson = this.cart[existingLessonIndex]
+
+        if (existingLesson.quantity > 1) {
+          existingLesson.quantity -= 1
+          existingLesson.spaces += 1 // Adjust spaces on removal
+        } else {
+          this.cart.splice(existingLessonIndex, 1) // Remove lesson if only 1
+        }
+        // Restore the spaces to the original lesson
+        const originalLesson = this.lessons.find(l => l._id === lessonId)
         if (originalLesson) {
           originalLesson.spaces += 1
         }
-
-        // Check if cart is empty and switch back to lessons list
-        if (this.cart.length === 0) {
-          this.showCart = false
-        }
+      }
+      this.updateCartCount()
+      this.updateTotalPrice()
+      // Check if cart is empty and switch back to lessons list
+      if (this.cart.length === 0) {
+        this.showCart = false
       }
     },
+    updateCartCount() {
+      this.cartCount = this.cart.reduce(
+        (total, lesson) => total + lesson.quantity,
+        0,
+      )
+    },
+    updateTotalPrice() {
+      this.totalPrice = this.cart.reduce(
+        (total, lesson) => total + lesson.quantity * lesson.price,
+        0,
+      )
+    },
+
+    // removeFromCart(lessonId) {
+    //   const index = this.cart.findIndex(cartItem => cartItem._id === lessonId)
+    //   if (index > -1) {
+    //     const removedLesson = this.cart.splice(index, 1)[0] // Remove from cart and get the lesson
+
+    //     // Restore spaces to the correct lesson in the lessons array
+    //     const originalLesson = this.lessons.find(
+    //       l => l._id === removedLesson._id,
+    //     )
+    //     if (originalLesson) {
+    //       originalLesson.spaces += 1
+    //     }
+
+    //     // Check if cart is empty and switch back to lessons list
+    //     if (this.cart.length === 0) {
+    //       this.showCart = false
+    //     }
+    //   }
+    // },
 
     clearCart() {
       this.cart = []
