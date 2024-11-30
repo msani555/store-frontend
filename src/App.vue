@@ -2,7 +2,12 @@
   <div>
     <NavBar :cartCount="cart.length" @toggle-cart="toggleView" />
     <div v-if="showCart">
-      <Cart :cart="cart" @remove-from-cart="removeFromCart" />
+      <Cart
+        :cart="cart"
+        :totalPrice="totalPrice"
+        @remove-from-cart="removeFromCart"
+        @clear-cart="clearCart"
+      />
     </div>
     <div v-else>
       <LessonList :lessons="lessons" @add-to-cart="addToCart" />
@@ -52,13 +57,6 @@ export default {
       this.showCart = !this.showCart
     },
 
-    // Remove lesson from cart and adjust space count
-    // removeFromCart(lesson) {
-    //   const index = this.cart.indexOf(lesson)
-    //   if (index > -1) {
-    //     this.cart.splice(index, 1)
-    //   }
-    // },
     removeFromCart(lessonId) {
       const index = this.cart.findIndex(cartItem => cartItem._id === lessonId)
       if (index > -1) {
@@ -77,6 +75,11 @@ export default {
           this.showCart = false
         }
       }
+    },
+
+    clearCart() {
+      this.cart = []
+      this.showCart = false // Switch back to lesson list
     },
   },
 
