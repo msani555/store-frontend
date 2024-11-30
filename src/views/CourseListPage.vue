@@ -7,7 +7,6 @@
           @onSort="sortLessons"
         /> -->
         <div>
-          hey
           <label
             v-for="option in sortOptions"
             :key="option"
@@ -27,23 +26,11 @@
         <h5 class="mt-3">Order:</h5>
         <div>
           <label class="btn btn-outline-secondary my-2 d-block">
-            <input
-              type="radio"
-              name="order"
-              value="asc"
-              v-model="sortOrder"
-              @change="sortLessons"
-            />
+            <input type="radio" name="order" value="asc" v-model="sortOrder" />
             Ascending
           </label>
           <label class="btn btn-outline-secondary d-block">
-            <input
-              type="radio"
-              name="order"
-              value="desc"
-              v-model="sortOrder"
-              @change="sortLessons"
-            />
+            <input type="radio" name="order" value="desc" v-model="sortOrder" />
             Descending
           </label>
         </div>
@@ -54,7 +41,7 @@
         <section class="row g-4">
           <LessonCard
             class="col-6 col-md-4"
-            v-for="lesson in lessons"
+            v-for="lesson in sortedLessons"
             :key="lesson.id"
             :lesson="lesson"
             @add-to-cart="addToCart"
@@ -70,55 +57,52 @@ import LessonCard from '../components/LessonCard.vue'
 
 export default {
   components: { LessonCard },
+  props: {
+    lessons: {
+      type: Array,
+      required: true,
+    },
+  },
   data() {
     return {
-      lessons: [],
       sortAttribute: 'subject',
       sortOrder: 'asc',
       selectedLesson: null,
       sortOptions: ['subject', 'location', 'price', 'spaces'],
-
-      cart: [],
     }
   },
-  methods: {
-    async fetchLessons() {
-      try {
-        const response = await fetch('http://localhost:5050/api/lessons')
-        const data = await response.json()
-        console.log('data:', data.results)
-        this.lessons = data.results
-      } catch (error) {
-        console.error('Error fetching lessons:', error)
-      }
-    },
-    addToCart(lesson) {
-      // Reduce space and add lesson to cart
-      if (lesson.spaces > 0) {
-        lesson.spaces -= 1
-        this.cart.push({ ...lesson })
-      }
-      this.cart.push({ ...lesson })
-      console.log(`cart: `, this.cart)
-    },
-
-    sortLessons() {
-      const sorted = [...this.lessons].sort((a, b) => {
-        const attribute = this.sortAttribute
+  computed: {
+    sortedLessons() {
+      // Create a sorted copy of lessons
+      return [...this.lessons].sort((a, b) => {
         const order = this.sortOrder === 'asc' ? 1 : -1
+        const attr = this.sortAttribute
 
-        if (typeof a[attribute] === 'string') {
-          return a[attribute].localeCompare(b[attribute]) * order
+        if (typeof a[attr] === 'string') {
+          return a[attr].localeCompare(b[attr]) * order
         }
-        return (a[attribute] - b[attribute]) * order
+        return (a[attr] - b[attr]) * order
       })
-
-      this.lessons = sorted
-      console.log('sorted lessons: ', this.lessons)
     },
   },
-  mounted() {
-    this.fetchLessons()
+  methods: {
+    addToCart(lesson) {
+      this.$emit('add-to-cart', lesson)
+    },
+    // sortLessons() {
+    //   const sorted = [...this.lessons].sort((a, b) => {
+    //     const attribute = this.sortAttribute
+    //     const order = this.sortOrder === 'asc' ? 1 : -1
+
+    //     if (typeof a[attribute] === 'string') {
+    //       return a[attribute].localeCompare(b[attribute]) * order
+    //     }
+    //     return (a[attribute] - b[attribute]) * order
+    //   })
+
+    //   this.lessons = sorted
+    //   console.log('sorted lessons: ', this.lessons)
+    // },
   },
 }
 </script>
