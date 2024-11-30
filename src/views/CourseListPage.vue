@@ -18,7 +18,6 @@
               name="attribute"
               :value="option"
               v-model="sortAttribute"
-              @change="sortLessons"
             />
             {{ option.charAt(0).toUpperCase() + option.slice(1) }}
           </label>
