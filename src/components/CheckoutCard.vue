@@ -9,11 +9,9 @@
         class="form-control"
         :class="{ 'is-invalid': nameError }"
         placeholder="Enter your name"
-        @blur="isNameTouched = true"
+        @blur="validateName"
       />
-      <div class="invalid-feedback" v-if="nameError">
-        Name must contain only letters.
-      </div>
+      <div class="invalid-feedback">Name must contain only letters.</div>
     </div>
 
     <div class="mb-3">
@@ -25,11 +23,9 @@
         class="form-control"
         :class="{ 'is-invalid': phoneError }"
         placeholder="Enter your phone number"
-        @blur="isPhoneTouched = true"
+        @blur="validatePhone"
       />
-      <div class="invalid-feedback" v-if="phoneError">
-        Phone must contain only numbers.
-      </div>
+      <div class="invalid-feedback">Phone must contain only numbers.</div>
     </div>
 
     <button
@@ -54,20 +50,28 @@ export default {
     return {
       name: '',
       phone: '',
+      nameError: false,
+      phoneError: false,
+      touchedName: false, // Tracks if the name field was interacted with
+      touchedPhone: false, // Tracks if the phone field was interacted with
+      isFormValid: false,
     }
   },
-  computed: {
-    nameError() {
-      return !/^[a-zA-Z\s]+$/.test(this.name)
-    },
-    phoneError() {
-      return !/^\d+$/.test(this.phone)
-    },
-    isFormValid() {
-      return this.name && this.phone && !this.nameError && !this.phoneError
-    },
-  },
   methods: {
+    validateName() {
+      this.touchedName = true // Mark field as touched
+      this.nameError = !/^[a-zA-Z\s]+$/.test(this.name)
+      this.updateFormValidity()
+    },
+    validatePhone() {
+      this.touchedPhone = true // Mark field as touched
+      this.phoneError = !/^\d+$/.test(this.phone)
+      this.updateFormValidity()
+    },
+    updateFormValidity() {
+      this.isFormValid =
+        !this.nameError && !this.phoneError && this.name && this.phone
+    },
     async submitOrder() {
       try {
         // 1. Prepare order data
