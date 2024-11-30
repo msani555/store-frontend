@@ -15,23 +15,25 @@
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNavDropdown">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <router-link to="/"> Courses </router-link>
-          </li>
-        </ul>
-        <ul class="navbar-nav ms-auto">
-          <router-link to="/carts">
-            <i class="bi bi-cart3"></i>
-          </router-link>
-        </ul>
-      </div>
+      <ul class="navbar-nav ms-auto">
+        <button :disabled="cartCount === 0" @click="toggleCart">
+          <i class="bi bi-cart3"></i> ({{ cartCount }})
+        </button>
+      </ul>
     </div>
   </nav>
 </template>
 
-<script></script>
+<script>
+export default {
+  props: ['cartCount'], // Number of items in the cart
+  methods: {
+    toggleCart() {
+      this.$emit('toggle-cart')
+    },
+  },
+}
+</script>
 
 <style scoped>
 .navbar {
