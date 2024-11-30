@@ -94,10 +94,10 @@ export default {
     },
     addToCart(lesson) {
       // Reduce space and add lesson to cart
-      // if (lesson.spaces > 0) {
-      //   lesson.spaces -= 1
-      //   this.cart.push({ ...lesson })
-      // }
+      if (lesson.spaces > 0) {
+        lesson.spaces -= 1
+        this.cart.push({ ...lesson })
+      }
       this.cart.push({ ...lesson })
       console.log(`cart: `, this.cart)
     },
