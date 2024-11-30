@@ -24,6 +24,11 @@ export default {
       showCart: false,
     }
   },
+  computed: {
+    totalPrice() {
+      return this.cart.reduce((sum, item) => sum + item.price, 0)
+    },
+  },
   methods: {
     async fetchLessons() {
       try {
@@ -41,21 +46,49 @@ export default {
         lesson.spaces -= 1
         this.cart.push({ ...lesson })
       }
-      console.log(`cart: `, this.cart)
     },
 
     toggleView() {
       this.showCart = !this.showCart
     },
 
-    removeFromCart(lesson) {
-      const index = this.cart.indexOf(lesson)
+    // Remove lesson from cart and adjust space count
+    // removeFromCart(lesson) {
+    //   const index = this.cart.indexOf(lesson)
+    //   if (index > -1) {
+    //     this.cart.splice(index, 1)
+    //   }
+    // },
+    removeFromCart(lessonId) {
+      const index = this.cart.findIndex(cartItem => cartItem._id === lessonId)
       if (index > -1) {
-        this.cart.splice(index, 1)
-        lesson.spaces++
+        const removedLesson = this.cart.splice(index, 1)[0] // Remove from cart and get the lesson
+
+        // Restore spaces to the correct lesson in the lessons array
+        const originalLesson = this.lessons.find(
+          l => l._id === removedLesson._id,
+        )
+        if (originalLesson) {
+          originalLesson.spaces += 1
+        }
+
+        // Check if cart is empty and switch back to lessons list
+        if (this.cart.length === 0) {
+          this.showCart = false
+        }
       }
     },
   },
+
+  //   removeFromCart(lesson) {
+  //     const index = this.cart.indexOf(lesson)
+  //     console.log('index: ', index)
+  //     if (index > -1) {
+  //       this.cart.splice(index, 1)
+  //       lesson.spaces++
+  //     }
+  //   },
+  // },
   mounted() {
     this.fetchLessons()
   },
