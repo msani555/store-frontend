@@ -81,33 +81,33 @@ export default {
           lessonIDs: this.cart.map(lesson => lesson._id),
           lessons: this.cart.map(lesson => ({
             id: lesson._id,
-            spaces: lesson.spaces,
+            // spaces: lesson.spaces,
+            spaces: lesson.spaces - lesson.quantity,
           })),
         }
         console.log('ordered data: ', orderData)
 
         // 2. Send order to the database
-        /*const orderResponse = await fetch('http://localhost:5050/api/orders', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(orderData),
-        })
+        // const orderResponse = await fetch('http://localhost:5050/api/orders', {
+        //   method: 'POST',
+        //   headers: { 'Content-Type': 'application/json' },
+        //   body: JSON.stringify(orderData),
+        // })
 
-        if (!orderResponse.ok) {
-          throw new Error('Failed to save order.')
-        }*/
+        // if (!orderResponse.ok) {
+        //   throw new Error('Failed to save order.')
+        // }
 
         // 3. Update lesson spaces in the database
-        /*const updatePromises = this.cart.map(lesson =>
-          fetch(`http://localhost:5050/api/lessons/${lesson._id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ spaces: lesson.spaces }),
-          }),
-        )
+        // const updatePromises = this.cart.map(lesson =>
+        //   fetch(`http://localhost:5050/api/lessons/${lesson._id}`, {
+        //     method: 'PUT',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify({ spaces: lesson.spaces }),
+        //   }),
+        // )
 
-        await Promise.all(updatePromises)
-        */
+        // await Promise.all(updatePromises)
 
         // 4. Reset form and cart on success
         alert('Order has been submitted successfully!')
