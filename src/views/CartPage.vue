@@ -40,18 +40,16 @@
 </template>
 
 <script>
-// import { cartItems } from '@/dummy_data'
-
 export default {
-  name: 'ProductsPage',
-  data() {
-    return {
-      cartItems: [],
-    }
+  props: {
+    cart: {
+      type: Array,
+      required: true,
+    },
   },
   computed: {
-    totalPrice() {
-      return this.cartItems.reduce((sum, item) => sum + Number(item.price), 0.0)
+    totalItems() {
+      return this.cart.reduce((total, item) => total + item.quantity, 0)
     },
   },
 }
