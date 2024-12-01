@@ -138,6 +138,8 @@ export default {
     clearCart() {
       this.cart = []
       this.showCart = false // Switch back to lesson list
+      this.cartCount = 0
+      this.totalPrice = 0
     },
   },
 
