@@ -10,7 +10,15 @@
       />
     </div>
     <div v-else>
-      <LessonList :lessons="lessons" @add-to-cart="addToCart" />
+      <div class="row" v-if="loading">
+        <div class="col-12 mx-auto text-center">
+          <div class="spinner-border text-primary" role="status"></div>
+          <p class="sr-only">Fetching data please wait...</p>
+        </div>
+      </div>
+      <div v-else>
+        <LessonList :lessons="lessons" @add-to-cart="addToCart" />
+      </div>
     </div>
   </div>
 </template>
@@ -31,6 +39,7 @@ export default {
       showCart: false,
       cartCount: 0,
       totalPrice: 0,
+      loading: true, // Add a loading state
     }
   },
 
@@ -43,6 +52,8 @@ export default {
         this.lessons = data.results
       } catch (error) {
         console.error('Error fetching lessons:', error)
+      } finally {
+        this.loading = false // Set loading to false after data fetching
       }
     },
 

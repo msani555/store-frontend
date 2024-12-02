@@ -49,7 +49,7 @@
         </section>
         <section class="row g-3">
           <LessonCard
-            class="col-6 col-md-4 card-container"
+            class="col-12 col-md-6 col-lg-4 card-container"
             v-for="lesson in sortedLessons"
             :key="lesson.id"
             :lesson="lesson"
