@@ -63,7 +63,6 @@
 
 <script>
 import LessonCard from '../components/LessonCard.vue'
-const baseUrl = window.config?.API_BASE_URL || 'http://localhost:5050/api'
 
 export default {
   components: { LessonCard },
@@ -116,7 +115,7 @@ export default {
           return
         }
 
-        fetch(`${baseUrl}/search?query=${this.searchQuery}`)
+        fetch(`${__API_BASE_URL__}/search?query=${this.searchQuery}`)
           .then(response => {
             if (!response.ok) {
               throw new Error('Failed to fetch search results')
