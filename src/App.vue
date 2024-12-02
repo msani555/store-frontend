@@ -31,29 +31,18 @@ export default {
       totalPrice: 0,
     }
   },
-  // computed: {
-  //   totalPrice() {
-  //     return this.cart.reduce((sum, item) => sum + item.price, 0)
-  //   },
-  // },
+
   methods: {
     async fetchLessons() {
       try {
         const response = await fetch('http://localhost:5050/api/lessons')
         const data = await response.json()
-        console.log('data:', data.results)
+
         this.lessons = data.results
       } catch (error) {
         console.error('Error fetching lessons:', error)
       }
     },
-    // addToCart(lesson) {
-    //   // Reduce space and add lesson to cart
-    //   if (lesson.spaces > 0) {
-    //     lesson.spaces -= 1
-    //     this.cart.push({ ...lesson })
-    //   }
-    // },
 
     addToCart(lesson) {
       if (lesson.spaces > 0) {
@@ -78,7 +67,6 @@ export default {
       const existingLessonIndex = this.cart.findIndex(
         item => item._id === lessonId,
       )
-      console.log('Clicked the removeFromCart: ', existingLessonIndex)
 
       if (existingLessonIndex > -1) {
         const existingLesson = this.cart[existingLessonIndex]
@@ -115,26 +103,6 @@ export default {
       )
     },
 
-    // removeFromCart(lessonId) {
-    //   const index = this.cart.findIndex(cartItem => cartItem._id === lessonId)
-    //   if (index > -1) {
-    //     const removedLesson = this.cart.splice(index, 1)[0] // Remove from cart and get the lesson
-
-    //     // Restore spaces to the correct lesson in the lessons array
-    //     const originalLesson = this.lessons.find(
-    //       l => l._id === removedLesson._id,
-    //     )
-    //     if (originalLesson) {
-    //       originalLesson.spaces += 1
-    //     }
-
-    //     // Check if cart is empty and switch back to lessons list
-    //     if (this.cart.length === 0) {
-    //       this.showCart = false
-    //     }
-    //   }
-    // },
-
     clearCart() {
       this.cart = []
       this.showCart = false // Switch back to lesson list
@@ -143,15 +111,6 @@ export default {
     },
   },
 
-  //   removeFromCart(lesson) {
-  //     const index = this.cart.indexOf(lesson)
-  //     console.log('index: ', index)
-  //     if (index > -1) {
-  //       this.cart.splice(index, 1)
-  //       lesson.spaces++
-  //     }
-  //   },
-  // },
   mounted() {
     this.fetchLessons()
   },

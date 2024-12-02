@@ -16,8 +16,13 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <ul class="navbar-nav ms-auto">
-        <button :disabled="cartCount === 0" @click="toggleCart">
-          <i class="bi bi-cart3"></i> ({{ cartCount }})
+        <button
+          class="btn btn-outline-primary"
+          :disabled="cartCount === 0"
+          @click="toggleCart"
+        >
+          <i class="bi bi-cart3"></i>
+          <span class="text-warning fw-bolder">({{ cartCount }})</span>
         </button>
       </ul>
     </div>
