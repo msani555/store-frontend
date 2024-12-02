@@ -43,9 +43,10 @@ export default {
 
     getImageUrl(imagePath) {
       const baseUrl =
-        process.env.NODE_ENV === 'production'
-          ? 'https://msani555.github.io/store-frontend/'
+        window.config?.production === 'production'
+          ? 'https://msani555.github.io/store-frontend'
           : '' // Development URL
+      console.log(`baseURL: ${baseUrl}${imagePath}`)
       return `${baseUrl}${imagePath}` // e.g., /images/lesson1.jpg
     },
   },
