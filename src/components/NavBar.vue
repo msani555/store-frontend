@@ -17,7 +17,7 @@
       </button>
       <ul class="navbar-nav ms-auto">
         <button
-          class="btn btn-outline-primary"
+          class="btn btn-outline-dark"
           :disabled="cartCount === 0"
           @click="toggleCart"
         >
