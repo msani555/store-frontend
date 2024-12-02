@@ -2,10 +2,6 @@
   <div class="container">
     <section class="row">
       <article class="col-12 col-md-2">
-        <!-- <SortControls
-          :sortOptions="['subject', 'location', 'price', 'spaces']"
-          @onSort="sortLessons"
-        /> -->
         <div>
           <label
             v-for="option in sortOptions"
@@ -37,9 +33,23 @@
       </article>
 
       <article class="col-12 col-md-10">
-        <section class="row g-4">
+        <!--Search bar full text search-->
+
+        <section class="row g-3">
+          <div class="mb-4 col-12 col-md-8 mx-auto">
+            <!-- Search Input -->
+            <input
+              type="text"
+              class="form-control mb-4"
+              placeholder="Search lessons by title, location, price, or availability..."
+              v-model="searchQuery"
+              @input="performSearch"
+            />
+          </div>
+        </section>
+        <section class="row g-3">
           <LessonCard
-            class="col-6 col-md-4"
+            class="col-6 col-md-4 card-container"
             v-for="lesson in sortedLessons"
             :key="lesson.id"
             :lesson="lesson"
@@ -68,12 +78,17 @@ export default {
       sortOrder: 'asc',
       selectedLesson: null,
       sortOptions: ['subject', 'location', 'price', 'spaces'],
+      // search
+      searchQuery: '', // Input query
+      fetchedLessons: [],
+      typingTimeout: null, // Timeout for "search as you type"
     }
   },
   computed: {
     sortedLessons() {
       // Create a sorted copy of lessons
-      return [...this.lessons].sort((a, b) => {
+      const lessons = this.searchQuery ? this.fetchedLessons : this.lessons
+      return [...lessons].sort((a, b) => {
         const order = this.sortOrder === 'asc' ? 1 : -1
         const attr = this.sortAttribute
 
@@ -88,23 +103,44 @@ export default {
     addToCart(lesson) {
       this.$emit('add-to-cart', lesson)
     },
-    // sortLessons() {
-    //   const sorted = [...this.lessons].sort((a, b) => {
-    //     const attribute = this.sortAttribute
-    //     const order = this.sortOrder === 'asc' ? 1 : -1
 
-    //     if (typeof a[attribute] === 'string') {
-    //       return a[attribute].localeCompare(b[attribute]) * order
-    //     }
-    //     return (a[attribute] - b[attribute]) * order
-    //   })
+    performSearch() {
+      if (this.typingTimeout) {
+        clearTimeout(this.typingTimeout)
+      }
 
-    //   this.lessons = sorted
-    //   console.log('sorted lessons: ', this.lessons)
-    // },
+      this.typingTimeout = setTimeout(() => {
+        if (!this.searchQuery.trim()) {
+          this.fetchedLessons = []
+          return
+        }
+
+        fetch(`http://localhost:5050/api/search?query=${this.searchQuery}`)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Failed to fetch search results')
+            }
+            return response.json()
+          })
+          .then(data => {
+            this.fetchedLessons = data // Use the fetched data
+            console.log(`fetchedLessons: `, this.fetchedLessons)
+          })
+          .catch(error => {
+            console.error('Error fetching search results:', error)
+            this.fetchedLessons = []
+          })
+      }, 300) // Delay of 300ms
+    },
   },
 }
 </script>
+<style>
+.card-container {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+</style>
 
 <!-- <script>
 import LessonCard from '../components/LessonCard.vue'
