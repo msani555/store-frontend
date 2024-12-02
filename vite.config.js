@@ -5,7 +5,7 @@ import vue from '@vitejs/plugin-vue'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: window.config?.production === 'production' ? '/store-frontend/' : '',
+  base: process.env.NODE_ENV === 'production' ? '/store-frontend/' : '',
   plugins: [vue()],
   resolve: {
     alias: {
