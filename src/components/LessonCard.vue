@@ -12,7 +12,7 @@
         </div>
 
         <img
-          :src="lesson.imageUrl"
+          :src="getImageUrl(lesson.imageUrl)"
           alt="lesson.imageUrl"
           class="img-fluid"
           style="width: 90px; height: 100%"
@@ -39,6 +39,14 @@ export default {
       if (this.lesson.spaces > 0) {
         this.$emit('add-to-cart', this.lesson)
       }
+    },
+
+    getImageUrl(imagePath) {
+      const baseUrl =
+        process.env.NODE_ENV === 'production'
+          ? 'https://msani555.github.io/store-frontend/'
+          : '' // Development URL
+      return `${baseUrl}${imagePath}` // e.g., /images/lesson1.jpg
     },
   },
 }
