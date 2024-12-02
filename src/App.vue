@@ -19,7 +19,8 @@
 import NavBar from './components/NavBar.vue'
 import LessonList from './views/CourseListPage.vue'
 import Cart from './views/CartPage.vue'
-const baseUrl = window.config?.API_BASE_URL || 'http://localhost:5050/api'
+
+console.log(`base url ${__API_BASE_URL__}`)
 
 export default {
   components: { NavBar, LessonList, Cart },
@@ -36,7 +37,7 @@ export default {
   methods: {
     async fetchLessons() {
       try {
-        const response = await fetch(`${baseUrl}/lessons`)
+        const response = await fetch(`${__API_BASE_URL__}/lessons`)
         const data = await response.json()
 
         this.lessons = data.results
