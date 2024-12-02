@@ -9,7 +9,7 @@
         >
           <div class="d-flex justify-content-between border p-4 rounded-3">
             <img
-              v-bind:src="cartItem.imageUrl"
+              v-bind:src="getImageUrl(cartItem.imageUrl)"
               alt="item.imageUrl"
               class="img-fluid"
               style="width: 90px; height: 100%"
@@ -78,6 +78,13 @@ export default {
 
     clearCart() {
       this.$emit('clear-cart')
+    },
+
+    getImageUrl(imagePath) {
+      const baseUrl =
+        process.env.NODE_ENV === 'production' ? '/store-frontend' : '' // Development URL
+      console.log(`baseURL: ${baseUrl}${imagePath}`)
+      return `${baseUrl}${imagePath}` // e.g., /images/lesson1.jpg
     },
   },
 }
