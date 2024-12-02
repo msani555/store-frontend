@@ -43,7 +43,7 @@ export default {
 
     getImageUrl(imagePath) {
       const baseUrl =
-        process.env.NODE_ENV === 'production' ? '/store-frontend/' : '' // Development URL
+        process.env.NODE_ENV === 'production' ? '/store-frontend' : '' // Development URL
       console.log(`baseURL: ${baseUrl}${imagePath}`)
       return `${baseUrl}${imagePath}` // e.g., /images/lesson1.jpg
     },
