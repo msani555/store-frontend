@@ -10,11 +10,13 @@
       />
     </div>
     <div v-else>
-      <div class="row" v-if="loading">
-        <div class="col-12 mx-auto text-center">
-          <div class="spinner-border text-primary" role="status"></div>
-          <p class="sr-only">Fetching data please wait...</p>
-        </div>
+      <div class="text-center py-5" v-if="loading">
+        <div
+          class="spinner-border text-primary"
+          style="width: 3rem; height: 3rem"
+          role="status"
+        ></div>
+        <p class="sr-only">Fetching data please wait...</p>
       </div>
       <div v-else>
         <LessonList :lessons="lessons" @add-to-cart="addToCart" />
