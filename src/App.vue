@@ -30,8 +30,6 @@ import NavBar from './components/NavBar.vue'
 import LessonList from './views/CourseListPage.vue'
 import Cart from './views/CartPage.vue'
 
-console.log(`base url ${__API_BASE_URL__}`)
-
 export default {
   components: { NavBar, LessonList, Cart },
   data() {
