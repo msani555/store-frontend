@@ -40,7 +40,6 @@
 </template>
 
 <script>
-const baseUrl = window.config?.API_BASE_URL || 'http://localhost:5050/api'
 export default {
   props: {
     cart: {
@@ -95,7 +94,7 @@ export default {
         console.log('ordered data: ', orderData)
 
         // 2. Send order to the database
-        const orderResponse = await fetch(`${baseUrl}/orders`, {
+        const orderResponse = await fetch(`${__API_BASE_URL__}/orders`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(orderData),
@@ -107,7 +106,7 @@ export default {
 
         // 3. Update lesson spaces in the database
         const updatePromises = this.cart.map(lesson =>
-          fetch(`${baseUrl}/lessons/${lesson._id}`, {
+          fetch(`${__API_BASE_URL__}/lessons/${lesson._id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ spaces: lesson.spaces - lesson.quantity }),

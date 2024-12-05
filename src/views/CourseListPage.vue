@@ -35,12 +35,12 @@
       <article class="col-12 col-md-10">
         <!--Search bar full text search-->
 
-        <section class="row g-3">
+        <section class="row g-3 py-3">
           <div class="mb-4 col-12 col-md-8 mx-auto">
             <!-- Search Input -->
             <input
               type="text"
-              class="form-control mb-4"
+              class="form-control form-control-lg mb-4"
               placeholder="Search lessons by title, location, price, or availability..."
               v-model="searchQuery"
               @input="performSearch"
